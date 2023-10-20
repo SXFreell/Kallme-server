@@ -1,0 +1,4 @@
+env: dev
+port: 6000
+app_name: kallme
+app_url: http://localhost
