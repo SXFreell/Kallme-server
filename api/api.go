@@ -1,6 +1,7 @@
 package api
 
 import (
+	"kallme/config"
 	"kallme/model"
 	"kallme/service"
 	"kallme/utils"
@@ -105,4 +106,59 @@ func Register(c *gin.Context) {
 		"code":    0,
 		"message": "success",
 	})
+}
+
+func LinkWS(c *gin.Context) {
+	token := c.Query("token")
+
+	config.Log.Info("token: ", token)
+
+	if token == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    1031,
+			"message": "token is empty",
+		})
+	}
+
+	service.HandleWebSocket(c, token)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    0,
+		"message": "success",
+	})
+}
+
+func SendMessage(c *gin.Context) {
+	var reqBody model.SendMessageReq
+
+	if err := c.ShouldBindJSON(&reqBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    1041,
+			"message": "fail to bind json, error: " + err.Error(),
+		})
+		return
+	}
+
+	token := reqBody.Token
+	msg := reqBody.Msg
+
+	if err := service.SendMessage(token, msg); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    1042,
+			"message": "fail to send message, error: " + err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    0,
+		"message": "success",
+	})
+	// } else {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"code":    1051,
+	// 		"message": "invalid token",
+	// 	})
+	// }
+
 }

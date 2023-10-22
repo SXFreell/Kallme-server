@@ -24,6 +24,8 @@ func main() {
 
 	router.POST("/login", func(c *gin.Context) { api.Login(c) })
 	router.POST("/register", func(c *gin.Context) { api.Register(c) })
+	router.GET("/ws", func(c *gin.Context) { api.LinkWS(c) })
+	router.POST("/send", func(c *gin.Context) { api.SendMessage(c) })
 
 	// 启动服务器
 	router.Run(":" + config.Config.Port)
