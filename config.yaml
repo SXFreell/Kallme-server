@@ -1,4 +1,7 @@
-env: dev
-port: 6000
-app_name: kallme
-app_url: http://localhost
+host: http://localhost
+port: 5000
+mongodb:
+  host: localhost
+  port: 27017
+  db: kallme
+
